@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Art Gallery - Midjourney Showcase</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="header__brand">
+                    <h1 class="brand-title">AI Art Gallery</h1>
+                    <span class="brand-subtitle">Midjourney Showcase</span>
+                </div>
+                
+                <div class="header__search">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="form-control search-input" placeholder="Search artworks, tags, or prompts...">
+                        <button class="search-btn" id="searchBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="header__actions">
+                    <button class="btn btn--outline theme-toggle" id="themeToggle">
+                        <svg class="theme-icon theme-icon--light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                        <svg class="theme-icon theme-icon--dark hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filters__categories">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="Focus">Focus</button>
+                    <button class="filter-btn" data-category="Latest">Latest</button>
+                    <button class="filter-btn" data-category="Archive">Archive</button>
+                    <button class="filter-btn" data-category="Video">Video</button>
+                    <button class="filter-btn" data-category="Music">Music</button>
+                </div>
+                
+                <div class="filters__options">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="featuredToggle">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Featured Only</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Gallery Stats -->
+            <div class="gallery-stats">
+                <div class="stats-item">
+                    <span class="stats-number" id="totalCount">0</span>
+                    <span class="stats-label">Artworks</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-number" id="featuredCount">0</span>
+                    <span class="stats-label">Featured</span>
+                </div>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="gallery" id="gallery">
+                <!-- Gallery items will be populated by JavaScript -->
+            </div>
+            
+            <!-- Loading indicator -->
+            <div class="loading hidden" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading artworks...</p>
+            </div>
+            
+            <!-- No results message -->
+            <div class="no-results hidden" id="noResults">
+                <div class="no-results__content">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <h3>No artworks found</h3>
+                    <p>Try adjusting your search or filters</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Lightbox Modal -->
+    <div class="lightbox hidden" id="lightbox">
+        <div class="lightbox__overlay"></div>
+        <div class="lightbox__container">
+            <button class="lightbox__close" id="lightboxClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+            </button>
+            
+            <button class="lightbox__nav lightbox__nav--next" id="lightboxNext">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+            </button>
+            
+            <div class="lightbox__content">
+                <div class="lightbox__image-container">
+                    <img class="lightbox__image" id="lightboxImage" alt="">
+                </div>
+                
+                <div class="lightbox__info">
+                    <div class="lightbox__header">
+                        <h2 class="lightbox__title" id="lightboxTitle"></h2>
+                        <div class="lightbox__meta">
+                            <span class="status status--success" id="lightboxPlatform"></span>
+                            <span class="lightbox__date" id="lightboxDate"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="lightbox__description" id="lightboxDescription"></div>
+                    
+                    <div class="lightbox__prompt">
+                        <h4>Prompt</h4>
+                        <p id="lightboxPrompt"></p>
+                    </div>
+                    
+                    <div class="lightbox__tags" id="lightboxTags"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__info">
+                    <p>&copy; 2025 AI Art Gallery. Showcasing the future of creative expression.</p>
+                    <p>Ready for Notion DB integration via Make/Zapier automation</p>
+                </div>
+                <div class="footer__links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">Documentation</a>
+                    <a href="#" target="_blank">API Reference</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="app.js"></script>
+</body>
+</html>
